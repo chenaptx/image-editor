@@ -1,0 +1,2 @@
+除了边缘检测和OSTU二值化之外的操作均可以在UI内调用
+边缘检测和OSTU二值化可以打开visual studio project1调用

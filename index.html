@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <style-sheet>
+    <link rel="stylesheet" href="ui.css">
+    <link rel="stylesheet" href="Myui.css">
+  </style-sheet>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background-color: rgb(43, 44, 44);
+      font-family: 'BlinkMacSystemFont', -apple-system, system, sans-serif;
+      font-size: 12px;
+      overflow: hidden;
+      position: relative;
+      
+    }
+  </style>
+
+
+ 
+  <script src="jquery-ui.min.js"></script>
+
+  <title>ImageEditor</title>
+</head>
+
+<body>
+
+  <nav class="drag-bar" width="100%">
+    <div class="col" height="100%">
+      <font size="5" class="title" style="padding-top:5px">
+        Image Editor
+      </font>
+    </div>
+
+    <div class="win-buttons col">
+      <button type="submit" id="min">最小化</button>
+      <button type="submit" id="max">最大化</button>
+      <button type="submit" id="close">关闭</button>
+    </div>
+
+
+
+  </nav>
+  <nav class="top-menu">
+
+    <button id="openimage" type="submit">Open</button>
+    <button id="saveimage" type="submit">Save</button>
+    <button id="back" type="submit">back</button>
+    
+    <input style="width:100px" id="showxy"/>
+   
+
+  </nav>
+  <div class="container">
+    <div class="toolbar left" style="pointer-events: all; opacity: 1;">
+
+      <button class="tab " id="colors" style="touch-action: manipulation; transform: translate(0px, 63px);">
+        <span class="icon-inner" style="    background-color: transparent;  ">
+          色彩
+        </span>
+        <!-- react-empty: 1403 -->
+      </button>
+      <button class="tab" id="filters" style="touch-action: manipulation; transform: translate(0px, 113px);">
+        <span class="icon-inner">
+          <span>滤波</span>
+        </span>
+        <!-- react-empty: 1407 -->
+      </button>
+      <button class="tab" id="geometry" style="touch-action: manipulation; transform: translate(0px, 163px);">
+        <span class="icon-inner">
+
+          <span class="badge" style="top: 0px;">几何</span>
+        </span>
+        <!-- react-empty: 1411 -->
+      </button>
+      <button class="tab" id="morphology" style="touch-action: manipulation; transform: translate(0px, 213px);">
+        <span class="icon-inner">
+          <span>形态学</span>
+        </span>
+        <!-- react-empty: 1415 -->
+      </button>
+      <button class="tab" id="detect" style="touch-action: manipulation; transform: translate(0px, 263px);">
+        <span class="icon-inner">
+          <span>分割</span>
+        </span>
+        <!-- react-empty: 1419 -->
+      </button>
+    </div>
+    <aside class="accordion-panel-content">
+
+      <div id="colortab" class="slider-wrapper" tabindex="1" style="touch-action: pan-y;visibility:visible;display:run-in;">
+        <div id="js-example-destroy">
+
+
+          <span class="title0" width="100%" style="text-align:center">
+            <!-- react-text: 511 -->色相
+            <!-- /react-text -->
+          </span>
+          <input id="hue" type="range" min="0" max="360" step="10" value="180" style=" width: 152px;
+              background-image: linear-gradient(90deg,hsla(231, 90%, 65%, 0.973),
+               rgba(82, 226, 94, 0.863),  rgba(243, 224, 52, 0.89), rgba(243, 74, 7, 0.877));
+      
+              " data-rangeslider/>
+
+          <output></output>
+
+        </div>
+        <div id="js-example-destroy">
+          <span class="title0">
+            <!-- react-text: 511 -->饱和度
+            <!-- /react-text -->
+          </span>
+
+          <input id="saturation" type="range" min="0" max="200" step="10" value="100" style=" width: 152px;
+        
+        background-image: linear-gradient(90deg, hsla(0, 0%, 50%, 0),hsla(231, 15%, 46%, 0.521),
+         rgba(82, 226, 94, 0.658),  rgba(243, 224, 52, 0.616), rgba(243, 74, 7, 0.877));
+
+        " data-rangeslider/>
+          <output></output>
+        </div>
+        <div id="js-example-destroy">
+          <span class="title0">
+            <!-- react-text: 511 -->亮度
+            <!-- /react-text -->
+          </span>
+          <input id="lightness" type="range" min="0" max="200" step="10" value="100" style=" width: 152px;
+        
+         
+          background-image: linear-gradient(90deg, hsla(0, 0%, 50%, 0),hsla(231, 15%, 46%, 0.521),
+           rgba(254, 255, 254, 0.993));
+  
+          " data-rangeslider/>
+
+          <output></output>
+        </div>
+
+        <div id="js-example-destroy">
+          <span class="title0">
+            <!-- react-text: 511 -->对比度
+            <!-- /react-text -->
+          </span>
+
+          <input id="contrast" type="range" min="0" max="200" step="10" value="100" style=" width: 152px;
+         
+          background-image:linear-gradient(90deg,  rgb(255, 255, 255),
+          rgb(109, 109, 109), rgb(0, 0, 0));
+            " data-rangeslider>
+
+          <output></output>
+        </div>
+        <div class="slider-wrapper"  id="autocontrast" tabindex="1" style="touch-action: pan-y;">
+          <div class="slider"  style="background-image:linear-gradient(90deg,  rgb(255, 255, 255),
+          rgb(109, 109, 109), rgb(0, 0, 0));border-radius:3px;">
+            <span class="title">
+              <!-- react-text: 511 -->自动对比度
+              <!-- /react-text -->
+            </span>
+            <span class="area">
+
+            </span>
+            <span class="input">0</span>
+          </div>
+
+        </div>
+        <div class="slider-wrapper" id="2Gray" tabindex="1" style="touch-action: pan-y;">
+          <div class="slider" style="background-color: rgb(83, 83, 83);border-radius:3px;">
+            <span class="title">
+              <!-- react-text: 511 -->灰度化
+
+            </span>
+
+
+          </div>
+
+
+        </div>
+        <div class="slider-wrapper" id="2Green" tabindex="1" style="touch-action: pan-y;">
+          <div class="slider" style="background-color: rgb(79, 172, 87);border-radius:3px;">
+            <span class="title">
+              <!-- react-text: 511 -->绿色通道
+
+            </span>
+
+
+          </div>
+
+
+        </div>
+        <div class="slider-wrapper" id="2Red" tabindex="1" style="touch-action: pan-y;">
+          <div class="slider" style="background-color: rgb(158, 62, 62);border-radius:3px;">
+            <span class="title">
+              <!-- react-text: 511 -->红色通道
+
+            </span>
+
+
+          </div>
+
+
+        </div>
+        <div class="slider-wrapper" id="2Blue" tabindex="1" style="touch-action: pan-y;">
+          <div class="slider" style="background-color: rgb(76, 90, 167);border-radius:3px;">
+            <span class="title">
+              <!-- react-text: 511 -->蓝色通道
+
+            </span>
+
+
+          </div>
+
+
+        </div>
+      </div>
+      <div id="filtertab" class="slider-wrapper" tabindex="1" style="touch-action: pan-y; visibility:visible;display:none;">
+        <div id="js-example-destroy">
+
+         
+            <span class="title0" width="100%" style="text-align:center;font-size: 18px;">
+              <!-- react-text: 511 -->Gauss Filter
+              <!-- /react-text -->
+            </span>
+            <input id="gauss_size" class="size" type="range" min="0" max="10" step="1" value="1" style=" width: 150px;
+              height:10px; margin-bottom:5px;margin-top:15px;
+               " data-rangeslider/>
+            <span style="text-align:center;font-size: 12px;">gauss size</span>
+            <input id="gauss_sigma" type="range" min="0.1" max="30" step="1" value="0" style=" width: 150px;
+           height:10px;margin-bottom:5px;margin-top:15px;
+            " data-rangeslider/>
+            
+            <span style="text-align:center;font-size: 12px;">gauss sigma</span>
+            <p>anchor.x:
+              <input id="gauss_anchor_x" type="text" style="width:80px;" /> anchor.y:
+              <input id="gauss_anchor_y" type="text" style="width:80px;" />
+
+              <button id="gauss_submit" style="width:130px;margin-top:5px;">确定</button>
+            </p>
+          
+         
+            <span class="title0" width="100%" style="text-align:center;font-size: 18px;">
+              <!-- react-text: 511 -->Median Filter
+              <!-- /react-text -->
+            </span>
+            <input id="median_size" class="size" type="range" min="0" max="5" step="1" value="1" style=" width: 150px;
+              height:10px; margin-bottom:5px;margin-top:15px;
+               " data-rangeslider/>
+            <span style="text-align:center;font-size: 12px;">anchor size</span>
+
+            <p>anchor.x:
+              <input id="median_anchor_x" type="text" style="width:80px;" /> anchor.y:
+              <input id="median_anchor_y" type="text" style="width:80px;" />
+
+              <button id="median_submit"  style="width:130px;margin-top:5px;">确定</button>
+            </p>
+         
+       
+            <span class="title0" width="100%" style="text-align:center;font-size: 18px;">
+              <!-- react-text: 511 -->Mean Filter
+              <!-- /react-text -->
+            </span>
+            <input id="mean_size" class="size" type="range" min="0" max="10" step="1" value="1" style=" width: 150px;
+              height:10px; margin-bottom:5px;margin-top:15px;
+               " data-rangeslider/>
+            <span style="text-align:center;font-size: 12px;">anchor size</span>
+
+            <p>anchor.x:
+              <input id="mean_anchor_x" type="text" style="width:80px;" /> anchor.y:
+              <input id="mean_anchor_y" type="text" style="width:80px;" />
+
+              <button id="mean_submit"  style="width:130px;margin-top:5px;">确定</button>
+            </p>
+          
+        </div>
+      </div>
+
+      <div id="geometrytab" class="slider-wrapper" tabindex="1" style="touch-action: pan-y; visibility:visible;display:none;">
+   
+          <div class="slider-wrapper" id="add" tabindex="1" style="touch-action: pan-y;">
+            <div class="slider" style="background-color: rgb(77, 129, 122);border-radius:3px;">
+              <span class="title">
+                <!-- react-text: 511 -->图像加法
+
+              </span>
+
+
+            </div>
+          </div>
+          <div class="slider-wrapper" id="substract" tabindex="1" style="touch-action: pan-y;">
+            <div class="slider" style="background-color:rgb(77, 129, 122);border-radius:3px;">
+              <span class="title">
+                <!-- react-text: 511 -->图像减法
+
+              </span>
+
+
+            </div>
+
+
+          </div>
+          <div class="slider-wrapper" id="mutiply" tabindex="1" style="touch-action: pan-y;">
+            <div class="slider" style="background-color:rgb(77, 129, 122);border-radius:3px;">
+              <span class="title">
+                <!-- react-text: 511 -->图像乘法
+
+              </span>
+
+
+            </div>
+
+
+          </div>
+          <div class="slider-wrapper" id="divide" tabindex="1" style="touch-action: pan-y;">
+            <div class="slider" style="background-color: rgb(77, 129, 122);border-radius:3px;">
+              <span class="title">
+                <!-- react-text: 511 -->图像除法
+              </span>
+            </div>
+          </div>
+          <input id="scale" class="size" type="range" min="10" max="500" step="10" value="100" style=" width: 150px;
+            height:10px; margin-bottom:5px;margin-top:15px;
+            " data-rangeslider/>
+          <span style="text-align:center;font-size: 15px;">scale</span>
+          <input id="rotate" type="range" min="0" max="360" step="1" value="0" style=" width: 150px;
+            height:10px;margin-bottom:5px;margin-top:15px;
+              " data-rangeslider/>
+          <span style="text-align:center;font-size: 15px;">rotate</span>
+
+         
+            <p>
+              x:
+              <input id="cut_x" type="text" style="width:60px;" /> y:
+              <input id="cut_y" type="text" style="width:60px;" />
+            </p>
+            <p>
+              w:
+              <input id="cut_w" type="text" style="width:60px;" /> h:
+              <input id="cut_h" type="text" style="width:60px;" />
+
+              <button id="cut"  style="width:100px;margin-top:5px;">裁剪</button>
+
+         
+       
+      </div>
+      <div id="morphologytab" class="slider-wrapper" tabindex="1" style="touch-action: pan-y; visibility:visible;display:none;">
+          <button id="distancetransform" type="submit" style="width:150px;margin-top:5px;">距离变换</button>
+          <button id="skeleton" type="submit" style="width:150px;margin-top:5px;">骨架化</button>
+          <button id="skeletonrebuild" type="submit" style="width:150px;margin-top:5px;">骨架重建</button>  
+        <span class="title0" width="100%" style="text-align:center;font-size:15px;width:152px;">
+              elem
+            </span>  
+           
+        <textarea rows="5" cols="20" id="elem" style="width:150px;height:60px;" ></textarea>
+        <a> 以"0 1 0;1 2 0;0 0 1;"的格式输入结构元，2代表anchor位置</a>
+        <button id="dilate" type="submit" style="width:75px;margin-top:5px;">膨胀</button>
+        <button id="erode" type="submit" style="width:75px;margin-top:5px;">腐蚀</button>
+        <button id="openning" type="submit" style="width:75px;margin-top:5px;">开操作</button>
+        <button id="closing" type="submit" style="width:75px;margin-top:5px;">闭操作</button>
+        <button id="Mrebuild" type="submit" style="width:150px;margin-top:5px;">二值形态学重建</button>
+          <p></p>
+          <button id="Gdilate" type="submit" style="width:75px;margin-top:5px;">灰度膨胀</button>
+        <button id="Gerode" type="submit" style="width:75px;margin-top:5px;">灰度腐蚀</button>
+        <button id="Gopenning" type="submit" style="width:75px;margin-top:5px;">灰度开操作</button>
+        <button id="Gclosing" type="submit" style="width:75px;margin-top:5px;">灰度闭操作</button>
+        <button id="GMrebuild" type="submit" style="width:150px;margin-top:5px;">灰度二值形态学重建</button>
+         <p></p>
+        <span class="title0" width="100%" style="text-align:center;font-size:15px;width:152px;">
+            window
+          </span> 
+        <textarea rows="5" cols="20" id="window1" style="width:150px;height:60px;" ></textarea>
+        <a>以"1 1 1 1;1 1 1 1;1 1 1 1;1 1 1 1;"的格式输入（覆盖所要查找的元素）</a>
+        <button id="thick" type="submit" style="width:75px;margin-top:5px;">粗化</button>
+        <button id="thin" type="submit" style="width:75px;margin-top:5px;">细化</button>
+        <p></p>
+    
+       
+      </div>
+     
+      <div id="detecttab" class="slider-wrapper" tabindex="1" style="touch-action: pan-y; visibility:visible;display:none;">
+       
+        <div class="slider-wrapper" id="Binaryostu" tabindex="1" style="touch-action: pan-y;">
+          <div class="slider" style="background-color: rgb(83, 83, 83);border-radius:3px;">
+            <span class="title">
+              <!-- react-text: 511 -->OSTU二值化
+
+            </span>
+
+
+          </div>
+        </div>
+          <input id="high" class="size" type="range" min="0" max="255" step="1" value="255" style=" width: 150px;
+          height:10px; margin-bottom:5px;margin-top:15px;
+           " data-rangeslider/><a>高阈值</a>
+           <input id="low" class="size" type="range" min="0" max="255" step="1" value="0" style=" width: 150px;
+           height:10px; margin-bottom:5px;margin-top:15px;
+            " data-rangeslider/><a>低阈值</a>
+        
+         <p></p>
+        
+         <div class="slider-wrapper" id="detectsobel"tabindex="1" style="touch-action: pan-y;">
+          <div class="slider" style="background-color: rgb(79, 172, 87);border-radius:3px;">
+            <span class="title">
+              <!-- react-text: 511 -->SOBEL边缘检测
+
+            </span>
+
+
+          </div>
+        </div>
+         
+          <div class="slider-wrapper" id="detectlaplace" tabindex="1" style="touch-action: pan-y;">
+            <div class="slider"  style="background-color: rgb(158, 62, 62);border-radius:3px;">
+              <span class="title">
+                <!-- react-text: 511 -->LAPLACE边缘检测
+
+              </span>
+
+
+            </div>
+
+
+          </div>
+          <div class="slider-wrapper" id="detectcanny" tabindex="1" style="touch-action: pan-y;">
+            <div class="slider" style="background-color: rgb(76, 90, 167);border-radius:3px;">
+              <span class="title">
+                <!-- react-text: 511 -->CANNY边缘检测
+
+              </span>
+
+
+            </div>
+
+
+          </div>
+          <div class="slider-wrapper" id="watershed" tabindex="1" style="touch-action: pan-y;">
+              <div class="slider" style="background-color: rgb(83, 83, 83);border-radius:3px;">
+                <span class="title">
+                  <!-- react-text: 511 -->分水岭算法
+  
+                </span>
+  
+  
+              </div>
+  
+  
+            </div>
+        </div>
+    </aside>
+    <div class="content">
+      <img id="imgsrc" class="img" src="src/test.jpeg" onmousemove="showxy">
+    </div>
+    </div>
+
+
+</body>
+<script>
+</script>
+<script type="text/javascript">
+const remote = require('electron').remote;
+console.log(remote.app.getVersion());
+
+const ipc = require('electron').ipcRenderer;
+ipc.on('reply', (event, message) => {
+  alert(message);
+  console.log('reply', message); // Prints Main Process Message.
+});
+ipc.on('saved', (event, message) => {
+  var info = "saved " + message;
+  alert(info);
+  console.log(info); // Prints Main Process Message.
+});
+
+
+var img = document.getElementById("imgsrc");
+var rect = img.getBoundingClientRect();
+var image = new Image();
+image.src = img.src;
+var naturalWidth = image.width;
+var naturalHeight = image.height;
+
+img.onmousemove=(event)=> {
+  var x = event.clientX - rect.left;
+  var y = event.clientY - rect.top;
+  document.getElementById("showxy").value= "x: "+x + "y: " + y;
+  
+}
+var minsize = (naturalWidth >= naturalHeight) ? naturalHeight : naturalWidth;
+console.log(naturalWidth);
+console.log(naturalHeight);
+console.log(minsize);
+
+var color_tab=document.getElementById("colors");
+var filter_tab=document.getElementById("filters");
+var geometry_tab=document.getElementById("geometry");
+var morphology_tab=document.getElementById("morphology");
+var detect_tab=document.getElementById("detect");
+
+var color_t=document.getElementById("colortab");
+var filter_t=document.getElementById("filtertab");
+var geometry_t=document.getElementById("geometrytab");
+var morphology_t=document.getElementById("morphologytab");
+var detect_t=document.getElementById("detecttab");
+color_tab.addEventListener("click",function(event){
+  color_t.style.display="";
+  document.getElementById("filtertab").style.display="none";
+  geometry_t.style.display="none";
+  morphology_t.style.display="none";
+  detect_t.style.display="none";
+  console.log(color_t.style.display);
+
+
+})
+filter_tab.addEventListener("click",function(event){
+  color_t.style.display="none";
+  document.getElementById("filtertab").style.display="";
+  geometry_t.style.display="none";
+  morphology_t.style.display="none";
+  detect_t.style.display="none";
+  console.log(filter_t.style.display);
+
+
+})
+geometry_tab.addEventListener("click",function(event){
+  color_t.style.display="none";
+  filter_t.style.display="none";
+  geometry_t.style.display="";
+  morphology_t.style.display="none";
+  detect_t.style.display="none";
+  console.log(geometry_t.style.display);
+
+
+})
+morphology_tab.addEventListener("click",function(event){
+  color_t.style.display="none";
+  filter_t.style.display="none";
+  geometry_t.style.display="none";
+  morphology_t.style.display="";
+  detect_t.style.display="none";
+  console.log(morphology_t.style.display);
+
+})
+detect_tab.addEventListener("click",function(event){
+  color_t.style.display="none";
+  filter_t.style.display="none";
+  geometry_t.style.display="none";
+  morphology_t.style.display="none";
+  detect_t.style.display="";
+  console.log(detect_t.style.display);
+
+})
+
+var button = document.getElementById("openimage");
+var back = document.getElementById("back");
+var save = document.getElementById("saveimage");
+button.addEventListener('click', function (event) {
+  ipc.send('open-file-dialog')
+  //注册的指令。send到主进程index.js中。
+})
+back.addEventListener('click', function (event) {
+  ipc.send('back')
+  //注册的指令。send到主进程index.js中。
+})
+save.addEventListener('click', function (event) {
+  ipc.send('save-file-dialog')
+  //注册的指令。send到主进程index.js中。
+})
+ipc.on('selected-directory', function (event, path) {
+  document.getElementById('imgsrc').src = `${path}`
+
+  image.src = img.src;
+  naturalWidth = image.width;
+  naturalHeight = image.height;
+  minsize = (naturalWidth >= naturalHeight) ? naturalHeight : naturalWidth;
+  console.log(naturalWidth);
+  console.log(naturalHeight);
+  console.log(minsize);
+
+})
+ipc.on('UpdateImage', function (event, path) {
+  document.getElementById('imgsrc').src = path;
+  console.log(path);
+  image.src = img.src;
+  naturalWidth = image.width;
+  naturalHeight = image.height;
+  minsize = (naturalWidth >= naturalHeight) ? naturalHeight : naturalWidth;
+  console.log(naturalWidth);
+  console.log(naturalHeight);
+  console.log(minsize);
+
+})
+
+
+var min = document.getElementById("min");
+var max = document.getElementById("max");
+var close = document.getElementById("close");
+
+min.addEventListener('click', function () {
+
+  ipc.send('hide-window');
+})
+max.addEventListener('click', function () {
+  ipc.send("show-window");
+})
+close.addEventListener('click', function () {
+  ipc.send('window-all-closed');
+});
+var hue = document.getElementById("hue");
+var saturation = document.getElementById("saturation");
+var lightness = document.getElementById("lightness");
+var contrast = document.getElementById("contrast");
+
+// hue.addEventListener("click",function(){
+//   var hue_v=hue.value;
+//   console.log("?");console.log(hue_v);
+// });
+// hue.onchange=function(e){
+//   var hue_v=hue.value;
+//   console.log("///");
+//   ipc.send("hue",hue_v);
+// }
+hue.oninput = function (e) {
+  var hue_v = hue.value;
+  console.log(hue_v);
+  ipc.send("hue", hue_v);
+}
+// hue.onmousemove=function(e){
+//   var hue_v=hue.value;
+//   console.log(hue_v);
+//   ipc.send("hue",hue_v);
+// }
+saturation.oninput = function (e) {
+  var saturation_v = saturation.value;
+  console.log(saturation_v);
+  ipc.send("saturation", saturation_v);
+}
+lightness.oninput = function (e) {
+  var lightness_v = lightness.value;
+  console.log(lightness_v);
+  ipc.send("lightness", lightness_v);
+}
+contrast.oninput = function (e) {
+  var contrast_v = contrast.value;
+  console.log(contrast_v);
+  ipc.send("contrast", contrast_v);
+}
+
+
+var Blue = document.getElementById("2Blue");
+var Red = document.getElementById("2Red");
+var Green = document.getElementById("2Green");
+var Gray = document.getElementById("2Gray");
+Gray.addEventListener('click', function () {
+  ipc.send('2Gray');
+})
+Green.addEventListener('click', function () {
+  ipc.send('2Green');
+})
+Blue.addEventListener('click', function () {
+  ipc.send('2Blue');
+})
+Red.addEventListener('click', function () {
+  console.log("?");
+  ipc.send('2Red');
+})
+var autocontrast = document.getElementById("autocontrast");
+autocontrast.addEventListener("click", function () {
+  console.log("autocontrast")
+  ipc.send('autocontrast');
+})
+var gauss_size=document.getElementById("gauss_size");
+var gauss_sigma=document.getElementById("gauss_sigma");
+var gauss_anchor_x=document.getElementById("gauss_anchor_x");
+var gauss_anchor_y=document.getElementById("gauss_anchor_y");
+var gauss_submit=document.getElementById("gauss_submit");
+
+gauss_submit.onclick=function(event){
+  var size=gauss_size.value;
+  var sigma=gauss_sigma.value*0.1;
+  var anchorx=gauss_anchor_x.value;
+  var anchory=gauss_anchor_y.value;
+  console.log(size);
+  console.log(sigma);
+  console.log(anchorx);
+  console.log(anchory);
+
+  ipc.send("gauss",size,sigma,anchorx,anchory);
+}
+
+var median_size=document.getElementById("median_size");
+var median_anchor_x=document.getElementById("median_anchor_x");
+var median_anchor_y=document.getElementById("median_anchor_y");
+var median_submit=document.getElementById("median_submit");
+
+median_submit.onclick=function(event){
+    ipc.send("median",median_size.value,median_anchor_x.value,median_anchor_y.value);
+}
+var mean_size=document.getElementById("mean_size");
+var mean_anchor_x=document.getElementById("mean_anchor_x");
+var mean_anchor_y=document.getElementById("mean_anchor_y");
+var mean_submit=document.getElementById("mean_submit");
+
+mean_submit.onclick=function(event){
+    ipc.send("mean",mean_size.value,mean_anchor_x.value,mean_anchor_y.value);
+}
+
+var add=document.getElementById("add");
+add.addEventListener("click",function(e){
+    ipc.send("add");
+})
+var substract=document.getElementById("substract");
+substract.addEventListener("click",function(e){
+    ipc.send("substract");
+})
+var mutiply=document.getElementById("mutiply");
+mutiply.addEventListener("click",function(e){
+    ipc.send("mutiply");
+})
+var divide=document.getElementById("divide");
+divide.addEventListener("click",function(e){
+    ipc.send("divide");
+})
+
+var scale=document.getElementById("scale");
+scale.oninput=function(e){
+    ipc.send("scale",scale.value);
+
+}
+var rotate=document.getElementById("rotate");
+rotate.oninput=function(e){
+    ipc.send("rotate",rotate.value);
+
+}
+var cut=document.getElementById("cut");
+cut.addEventListener("click",function(e){
+    var cut_x=document.getElementById("cut_x").value;
+    var cut_y=document.getElementById("cut_y").value;
+    var cut_w=document.getElementById("cut_w").value;
+    var cut_h=document.getElementById("cut_h").value;
+    ipc.send("cut",cut_x,cut_y,cut_w,cut_h);
+})
+
+var distancetransform=document.getElementById("distancetransform");
+distancetransform.addEventListener("click",function(e){
+    ipc.send("distancetransform");
+})
+var skeleton=document.getElementById("skeleton");
+skeleton.addEventListener("click",function(e){
+    ipc.send("skeleton");
+})
+var skeletonrebuild=document.getElementById("skeletonrebuild");
+skeletonrebuild.addEventListener("click",function(e){
+    ipc.send("skeletonrebuild");
+})
+var elem=document.getElementById("elem");
+var window1=document.getElementById("window1");
+var dilate=document.getElementById("dilate");
+dilate.addEventListener("click",function(e){
+    var v=elem.value;
+    console.log(v);
+    ipc.send("dilate",v);
+})
+var erode=document.getElementById("erode");
+erode.addEventListener("click",function(e){
+    var v=elem.value;
+    console.log(v);
+    ipc.send("erode",v);
+})
+var openning=document.getElementById("openning");
+openning.addEventListener("click",function(e){
+    var v=elem.value;
+    console.log(v);
+    ipc.send("openning",v);
+})
+var closing=document.getElementById("closing");
+closing.addEventListener("click",function(e){
+    var v=elem.value;
+    console.log(v);
+    ipc.send("closing",v);
+})
+var Mrebuild=document.getElementById("Mrebuild");
+Mrebuild.addEventListener("click",function(e){
+    var v=elem.value;
+    console.log(v);
+    ipc.send("Mrebuild",v);
+})
+
+var thick=document.getElementById("thick");
+thick.addEventListener("click",function(e){
+    console.log("thick");
+    var v=elem.value;
+    var w=window1.value;
+    console.log(v);
+    console.log(w);
+    ipc.send("thick",v,w);
+})
+var thin=document.getElementById("thin");
+thin.addEventListener("click",function(e){
+    var v=elem.value;
+    var vv=window1.value;
+    console.log(vv);
+    ipc.send("thin",v,vv);
+})
+
+var Gdilate=document.getElementById("Gdilate");
+Gdilate.addEventListener("click",function(e){
+    var v=elem.value;
+    console.log(v);
+    ipc.send("Gdilate",v);
+})
+var Gerode=document.getElementById("Gerode");
+Gerode.addEventListener("click",function(e){
+    var v=elem.value;
+    console.log(v);
+    ipc.send("Gerode",v);
+})
+var Gopenning=document.getElementById("Gopenning");
+Gopenning.addEventListener("click",function(e){
+    var v=elem.value;
+    console.log(v);
+    ipc.send("Gopenning",v);
+})
+var Gclosing=document.getElementById("Gclosing");
+Gclosing.addEventListener("click",function(e){
+    var v=elem.value;
+    console.log(v);
+    ipc.send("Gclosing",v);
+})
+var GMrebuild=document.getElementById("GMrebuild");
+GMrebuild.addEventListener("click",function(e){
+    var v=elem.value;
+    console.log(v);
+    ipc.send("GMrebuild",v);
+})
+var BinaryO=document.getElementById("Binaryostu");
+BinaryO.addEventListener("onclick",function(e){
+    console.log("Binaryostu");
+    ipc.send("Binaryostu");
+})
+var high=document.getElementById("high");
+high.oninput=function(e){
+    var v=high.value;
+    var vv=low.value;
+    ipc.send("Binary",vv,v);
+
+}
+var low=document.getElementById("low");
+low.oninput=function(e){
+    var v=high.value;
+    var vv=low.value;
+    ipc.send("Binary",vv,v);
+
+}
+var detectsobel=document.getElementById("detectsobel");
+function detectsobel(e){
+  alert("detectsobel");
+    ipc.send("detectsobel");
+}
+detectsobel.addEventListener("onclick",function(e){
+  alert("detectsobel");
+    ipc.send("detectsobel");
+})
+var detectlaplace=document.getElementById("detectlaplace");
+detectlaplace.addEventListener("onclick",function(e){
+  alert("detectlaplace");
+
+    ipc.send("detectlaplace");
+})
+var detectcanny=document.getElementById("detectcanny");
+detectcanny.addEventListener("onclick",function(e){
+  alert("detectcanny");
+
+    ipc.send("detectcanny");
+})
+var watershed=document.getElementById("watershed");
+watershed.addEventListener("onclick",function(e){
+  alert("watershed");
+
+    ipc.send("watershed");
+})
+
+</script>
+
+</html>
